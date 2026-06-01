@@ -140,4 +140,10 @@ const SITE = {
   assets: {
     favicon32: "assets/icons/favicon-32x32.png",
   },
+
+  emailjs: {
+    serviceId: "service_tl1t3yp",
+    templateId: "template_lk1ge6v",
+    publicKey: "qNtkCW7O8vp11tN90",
+  },
 };

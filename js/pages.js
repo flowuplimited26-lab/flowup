@@ -158,18 +158,74 @@ const Pages = (function () {
               <p>${contact.hours}</p>
             </div>
           </div>
-          <form class="contact-form reveal" id="contact-form" action="mailto:${contact.email}" method="post" enctype="text/plain">
+          <form class="contact-form reveal" id="contact-form">
             <h2 class="contact-form__title">Send a message</h2>
             <label for="name">Your name</label>
-            <input type="text" id="name" name="name" required autocomplete="name">
+            <input type="text" id="name" name="user_name" required autocomplete="name">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required autocomplete="email">
+            <input type="email" id="email" name="user_email" required autocomplete="email">
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="4" required></textarea>
+            <div id="form-status" style="display:none; margin-top:1rem; padding:0.75rem; border-radius:0.375rem; font-size:0.875rem;"></div>
             <button type="submit" class="btn btn--accent btn--block">${contact.form.submitLabel}</button>
           </form>
         </div>
       </section>`;
+  }
+
+  function attachContactFormHandler() {
+    const form = document.getElementById("contact-form");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const button = form.querySelector("button[type='submit']");
+      const statusDiv = document.getElementById("form-status");
+      const originalButtonText = button.textContent;
+      
+      try {
+        button.disabled = true;
+        button.textContent = "Sending...";
+        statusDiv.style.display = "none";
+
+        // Initialize emailjs if not already done
+        if (!window.emailJSInitialized) {
+          emailjs.init(SITE.emailjs.publicKey);
+          window.emailJSInitialized = true;
+        }
+
+        const templateParams = {
+          user_name: form.querySelector("#name").value,
+          user_email: form.querySelector("#email").value,
+          message: form.querySelector("#message").value,
+          to_email: contact.email,
+        };
+
+        await emailjs.send(
+          SITE.emailjs.serviceId,
+          SITE.emailjs.templateId,
+          templateParams
+        );
+
+        statusDiv.style.backgroundColor = "#d4edda";
+        statusDiv.color = "#155724";
+        statusDiv.textContent = "Message sent successfully! We'll get back to you soon.";
+        statusDiv.style.display = "block";
+        form.reset();
+        button.textContent = originalButtonText;
+        button.disabled = false;
+
+      } catch (error) {
+        console.error("Email send failed:", error);
+        statusDiv.style.backgroundColor = "#f8d7da";
+        statusDiv.color = "#721c24";
+        statusDiv.textContent = "Failed to send message. Please try again or contact us directly.";
+        statusDiv.style.display = "block";
+        button.textContent = originalButtonText;
+        button.disabled = false;
+      }
+    });
   }
 
   const renderers = {
@@ -182,6 +238,11 @@ const Pages = (function () {
   function init() {
     const render = renderers[document.body.dataset.page];
     if (render) render();
+    
+    // Attach contact form handler if on contact page
+    if (document.body.dataset.page === "contact") {
+      attachContactFormHandler();
+    }
   }
 
   return { init };
