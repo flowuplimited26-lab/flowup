@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://flowupheating.co.uk/sitemap.xml
+Host: https://flowupheating.co.uk
+
+# Prefer clean HTML pages and standard assets
+# The site is simple and all public content should be crawled.
