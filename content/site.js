@@ -127,10 +127,10 @@ const SITE = {
       lines: ["The Vale", "London", "W3 7SA", "United Kingdom"],
     },
     phone: {
-      display: "+44 7908826396",
+      display: "07908826396",
       tel: "+447908826396",
     },
-    email: "flowupheatingltd@gmail.com",
+    email: "info@flowupheating.co.uk",
     hours: "Mon–Fri 8:00–18:00 · Emergency call-outs available",
     form: {
       submitLabel: "Send message",
