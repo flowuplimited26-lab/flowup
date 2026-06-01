@@ -195,11 +195,17 @@ const Pages = (function () {
           window.emailJSInitialized = true;
         }
 
+        const userName = form.querySelector("#name").value;
+        const userEmail = form.querySelector("#email").value;
+        const userMessage = form.querySelector("#message").value;
+
         const templateParams = {
-          user_name: form.querySelector("#name").value,
-          user_email: form.querySelector("#email").value,
-          message: form.querySelector("#message").value,
+          user_name: userName,
+          user_email: userEmail,
+          message: userMessage,
           to_email: contact.email,
+          reply_to: userEmail,
+          subject: `New contact from ${userName}`,
         };
 
         await emailjs.send(
